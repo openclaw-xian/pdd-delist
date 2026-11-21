@@ -1,0 +1,45 @@
+# pdd-delist
+
+拼多多多店铺商品下架（ego 浏览器）—— DeepSeek Harness (DSH) skill。
+
+按 goods_id 清单或标题关键词枚举在售商品，逐条下架/申请下架，切「已下架」回读，关键词清零复核，落每日记录。
+
+## 安全
+
+默认 `dryRun: true`，只读枚举；真实下架必须 `dryRun:false` + `confirmDestructive:true`，且用户确认清单和 reason。
+
+## 安装
+
+复制/联接到 `~/.agents/skills/pdd-delist`。
+
+## 用法
+
+```bash
+node run.mjs delist-config.json
+```
+
+```json
+{
+  "recordRoot": "D:/pdd-delist",
+  "dryRun": true,
+  "confirmDestructive": false,
+  "reason": "暂停销售",
+  "shops": [{ "shop": "<店铺A>", "profile": "<profile-A>" }],
+  "ids": [],
+  "keyword": "<标题关键词>",
+  "enumerateOnly": false,
+  "dryRun": true
+}
+```
+
+- `enumerateOnly:true`：只读枚举，不处理商品
+- `dryRun:true`：只读计划；真实下架需 `dryRun:false` + `confirmDestructive:true`
+
+## 输出
+
+```
+<recordRoot>/<店铺>/pdd-delist-<YYYY-MM-DD>.md
+<recordRoot>/_runs/delist-<时间>/report.json
+```
+
+详细流程、选择器、坑、边界见 [SKILL.md](SKILL.md)。
