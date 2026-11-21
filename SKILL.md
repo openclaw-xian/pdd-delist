@@ -38,7 +38,7 @@ node <skill目录>/run.mjs delist-config.json
 }
 ```
 
-- `ids` 和 `keyword` 二选一（都为空会预检失败）
+- `ids` 和 `keyword` 二选一（都为空会预检失败）；也支持在 `shops[]` 里给**每店独立 ids/keyword**（优先于全局）
 - `enumerateOnly:true`：只枚举/读状态/写枚举清单，不处理任何商品（验收、评审清单时用）
 - `dryRun` 默认 true；真实下架需要 `dryRun:false` + `confirmDestructive:true`
 - `ids` 模式：按 ID 逐个过滤、读取、处理
@@ -122,6 +122,6 @@ md 表列：
 ## 测试边界
 
 - 已用 dry-run 验证：关键词 `墙纸` 枚举 15 条/2 页；`自粘` 32 条/4 页；3 店 enumerateOnly 全部 done
-- **live 已测 2 条**：申请下架（off_shelf，29.1s）、普通下架（off_shelf，26.1s）
+- **live 已测 9 条**：单条申请下架（29.1s）、单条普通下架（26.1s）、**3 店 7 条多店 live**（2/2/3，全部 off_shelf，54.9/51/67.8s）
 - 历史真实下架回归：2026-11-05 三店 41 条（旧脚本）
-- 未测：关键词清零 live、多店串联 live
+- 未测/非阻塞：关键词清零 live（默认禁用）

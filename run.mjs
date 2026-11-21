@@ -25,17 +25,32 @@ const DRYRUN = CFG.dryRun !== false; // 默认只读，防止误操作
 
 const issues = [];
 const addIssue = (code, question, extra = {}) => issues.push({ code, question, ...extra });
-const shops = (CFG.shops || []).map((s) => (typeof s === "string" ? { shop: s } : s)).filter((s) => s && s.shop);
+function parseIds(v) {
+  if (Array.isArray(v)) return v.map((x) => String(x).trim()).filter(Boolean);
+  return String(v || "").split(/[\s,，]+/).map((x) => x.trim()).filter(Boolean);
+}
+const shops = (CFG.shops || []).map((s) => (typeof s === "string" ? { shop: s } : s)).filter((s) => s && s.shop)
+  .map((s) => ({
+    ...s,
+    _hasIds: s.ids !== undefined,
+    _ids: parseIds(s.ids),
+    _hasKeyword: s.keyword !== undefined,
+    _keyword: String(s.keyword || "").trim(),
+  }));
 const only = CFG.only && CFG.only.length ? CFG.only : null;
-const ids = (Array.isArray(CFG.ids) ? CFG.ids : String(CFG.ids || "").split(/[\s,，]+/)).map((x) => String(x).trim()).filter(Boolean);
+const useShops = only ? shops.filter((s) => only.includes(s.shop)) : shops;
+const ids = parseIds(CFG.ids);
 const keyword = String(CFG.keyword || "").trim();
+const shopHasTarget = useShops.some((s) => (s._hasIds && s._ids.length) || (s._hasKeyword && s._keyword));
+const anyKeyword = !!keyword || useShops.some((s) => s._hasKeyword && s._keyword);
 
 if (!shops.length) addIssue("shops_missing", "config 需要 shops");
-if (!ids.length && !keyword) addIssue("target_missing", "config 需要 ids 或 keyword");
+if (!useShops.length) addIssue("no_store_selected", "only 过滤后没有店铺");
+if (!ids.length && !keyword && !shopHasTarget) addIssue("target_missing", "config 需要全局 ids/keyword，或在 shops 里给每店 ids/keyword");
 if (!CFG.recordRoot && !CFG.root) addIssue("root_missing", "请配置 recordRoot（记录输出目录）");
 if (!DRYRUN && CFG.confirmDestructive !== true) addIssue("destructive_not_confirmed", "真实下架必须显式 confirmDestructive:true；先用 dryRun 确认清单");
 if (!DRYRUN && !String(CFG.reason || "暂停销售").trim()) addIssue("reason_empty", "申请下架需要非空 reason");
-if (!DRYRUN && keyword && CFG.allowKeywordLive !== true) addIssue("keyword_live_not_allowed", "关键词模式真实下架可能一次下很多商品；如确认要批量下架，显式 allowKeywordLive:true");
+if (!DRYRUN && anyKeyword && CFG.allowKeywordLive !== true) addIssue("keyword_live_not_allowed", "关键词模式真实下架可能一次下很多商品；如确认要批量下架，显式 allowKeywordLive:true");
 if (!existsSync(EGO)) addIssue("ego_not_found", "ego-browser 不可用：" + EGO, { ego: EGO });
 
 if (issues.length) {
@@ -43,8 +58,6 @@ if (issues.length) {
   console.log(JSON.stringify({ status: "needs_user_input", dryRun: DRYRUN, recordRoot: RECORD_ROOT, issues }, null, 1));
   process.exit(3);
 }
-const useShops = only ? shops.filter((s) => only.includes(s.shop)) : shops;
-if (!useShops.length) { console.error("only 过滤后没有店铺"); process.exit(3); }
 await fs.mkdir(RESULT_DIR, { recursive: true });
 await fs.mkdir(LOG_DIR, { recursive: true });
 await fs.mkdir(RUNTIME + "/" + RUN_ID, { recursive: true });
@@ -53,7 +66,8 @@ async function runOne(store, i) {
   const job = {
     shop: store.shop,
     profile: store.profile || null,
-    ids, keyword,
+    ids: store._hasIds ? store._ids : ids,
+    keyword: store._hasKeyword ? store._keyword : keyword,
     reason: String(CFG.reason || "暂停销售"),
     dryRun: DRYRUN,
     enumerateOnly: !!CFG.enumerateOnly,

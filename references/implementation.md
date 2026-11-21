@@ -9,7 +9,7 @@ worker-delist.mjs  ego 内：找店 → 枚举 → 逐条下架 → 回读 → �
 
 ## 调度器
 
-1. 读 config：recordRoot、shops、ids/keyword、dryRun、reason
+1. 读 config：recordRoot、shops（支持 `shops[].ids/keyword` 覆盖全局）、ids/keyword、dryRun、reason
 2. 预检：
    - shops 非空
    - ids/keyword 至少一个

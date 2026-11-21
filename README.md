@@ -33,6 +33,7 @@ node run.mjs delist-config.json
 ```
 
 - `enumerateOnly:true`：只读枚举，不处理商品
+- 每店可单独给目标：`shops:[{shop,profile,ids:["..."]},{shop,profile,keyword:"..."}]`；优先于全局 `ids/keyword`
 - `dryRun:true`：只读计划；真实下架需 `dryRun:false` + `confirmDestructive:true`
 - 关键词 live 会批量下架，默认被拦；确需批量必须显式 `allowKeywordLive:true`。日常 live 用 `ids` 模式。
 

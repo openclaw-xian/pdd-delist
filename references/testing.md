@@ -34,10 +34,21 @@
 |---|---|
 | 测试 ID 单条（申请下架） | `on_sale` → 申请下架 → `off_shelf` / unlisted，29.1s |
 | 测试 ID 单条（普通下架） | `on_sale` → 下架 → `off_shelf` / unlisted，26.1s |
-| 记录 | `D:/pdd-delist/碧竹家居/pdd-delist-2026-11-21.md` |
+| 记录 | `<recordRoot>/<店铺B>/pdd-delist-2026-11-21.md` |
+
+## 多店 live
+
+| 店铺 | 条数 | 方式 | 结果 | 耗时 |
+|---|---|---|---|---|
+| <店铺A> | 2 | 申请下架 | off_shelf | 54.9s |
+| <店铺B> | 2 | 申请下架 | off_shelf | 51.0s |
+| <店铺C> | 3 | 申请下架 | off_shelf | 67.8s |
+
+- 配置使用 **每店独立 ids**（`shops[].ids`），不再全局同一 ID 列表
+- 三店顺序执行、各自记录，全部 unlisted，exit 0
+- 商品均来自 2026-10-31 创建、收藏0、累计销量0 的测试批次
 
 ## 未测 / 非阻塞
 
 - 关键词清零复核 live：**默认禁用**，非日常使用，不作为交付阻塞
-- 多店串联 live
 - 页面预算 needs（页面预算自动重建已在 enumerateOnly 验证）
