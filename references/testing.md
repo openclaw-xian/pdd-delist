@@ -27,11 +27,12 @@
 | 用例 | 结果 |
 |---|---|
 | 测试 ID 单条（申请下架） | `on_sale` → 申请下架 → `off_shelf` / unlisted，29.1s |
+| 测试 ID 单条（普通下架） | `on_sale` → 下架 → `off_shelf` / unlisted，26.1s |
 | 记录 | `D:/pdd-delist/碧竹家居/pdd-delist-2026-11-21.md` |
 
 ## 未测
 
 - 关键词清零复核（live）
 - 多店串联 live
-- 普通下架（非申请）的新代码 live（旧版历史 21 条普通下架）
+- ~~普通下架（非申请）的新代码 live~~ 已测（单条普通下架，26.1s）
 - 页面预算 needs

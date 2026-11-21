@@ -448,7 +448,9 @@ async function main() {
   ];
   if (zeroCheck) lines.push("", "## 清零复核", "- 在售中 + 关键词「" + keyword + "」剩余：" + zeroCheck.remaining + "（要求 0）");
   lines.push("", "> 下架 ≠ 删除；可在「已下架」点「上架」恢复（会重新审核）。");
-  await fs.writeFile(mdPath, lines.join("\n"), "utf8");
+  let prefix = "";
+  try { await fs.access(mdPath); prefix = "\n\n---\n\n## 运行 " + localStamp() + "\n\n"; } catch (e) {}
+  await fs.appendFile(mdPath, prefix + lines.join("\n"), "utf8");
   return {
     status: "done",
     mode: JOB.dryRun ? "dry_run" : "live",
