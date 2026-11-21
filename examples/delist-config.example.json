@@ -1,0 +1,11 @@
+{
+  "recordRoot": "D:/pdd-delist",
+  "dryRun": true,
+  "confirmDestructive": false,
+  "reason": "暂停销售",
+  "shops": [
+    { "shop": "<店铺A>", "profile": "<profile-A>" }
+  ],
+  "ids": [],
+  "keyword": "<标题关键词>"
+}
