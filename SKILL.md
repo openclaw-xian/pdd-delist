@@ -45,6 +45,41 @@ node <skill目录>/run.mjs delist-config.json
 - `keyword` 模式：先按标题关键词查，**翻完所有页**枚举在售 ID，再去重
 - 多店默认顺序执行（同一时刻只动一个店）
 
+### 每店独立目标
+
+```json
+{
+  "recordRoot": "D:/pdd-delist",
+  "dryRun": false,
+  "confirmDestructive": true,
+  "shops": [
+    { "shop": "<店铺A>", "profile": "<profile-A>", "ids": ["<A-ID1>", "<A-ID2>"] },
+    { "shop": "<店铺B>", "profile": "<profile-B>", "keyword": "<B关键词>" }
+  ]
+}
+```
+
+- `shops[].ids` / `shops[].keyword` 优先于全局
+- 多店 live 时每店可用自己的清单，不会跨店套用
+
+## 配置字段
+
+| 字段 | 默认 | 说明 |
+|---|---|---|
+| `recordRoot` | `D:/pdd-delist` | 记录根目录；`root` 也可作别名 |
+| `dryRun` | **true** | 只读计划；live 必须显式 false |
+| `confirmDestructive` | false | live 必须 true |
+| `allowKeywordLive` | false | 关键词 live 批量下架保护；必须显式 true |
+| `reason` | `暂停销售` | 申请下架 textarea 文案 |
+| `shops` | 必填 | `[{shop,profile,ids?,keyword?}]` |
+| `ids` | — | 全局 ID 清单（字符串数组/逗号空格分隔） |
+| `keyword` | — | 全局标题关键词 |
+| `enumerateOnly` | false | 只枚举/写清单，不处理 |
+| `only` | — | 只跑指定店铺 |
+| `keepOpen` | false | 成功也保留页面 |
+| `jobTimeoutSec` | 600 | 单店超时 |
+| `ego` / `worker` / `runtimeDir` / `allowC` | 自动 | 同其他 pdd skill |
+
 ## 执行流程
 
 1. 按 profile 找空间/建空间；打开商品列表；回读店铺名
@@ -66,10 +101,14 @@ node <skill目录>/run.mjs delist-config.json
 
 ```
 <recordRoot>/<店铺>/pdd-delist-<YYYY-MM-DD>.md
+<recordRoot>/<店铺>/pdd-delist-enumerate-<YYYY-MM-DD>.md   # enumerateOnly
 <recordRoot>/_runs/delist-<时间>/report.json
 <recordRoot>/_runs/delist-<时间>/logs/<店铺>.log
 <recordRoot>/_runs/delist-<时间>/results/<店铺>.json
 ```
+
+- 同一天多次运行：`pdd-delist-<date>.md` **追加**，用 `---` + 运行时间分隔，不覆盖历史
+- dry-run 的 `方式` 显示 `would_下架` / `would_申请下架`
 
 md 表列：
 `goods_id | 标题 | 原状态 | 方式（下架/申请下架/would_*） | 新状态 | 结果`
