@@ -11,4 +11,5 @@
 | 关键词枚举数量不对 | 页签 `(34)` 是店铺总在售，不是过滤后 | 以实际翻页收集的 ID 为准 |
 | 店铺跑错 | 默认 profile 会变 | 显式 profileId + 回读店铺名 |
 | 短时间多次跑 | 风控/页面状态 | 一次只操作一个店；失败即停 |
+| 关键词 live 误批量下架 | keyword 命中多商品 | 默认 `keyword_live_not_allowed`；日常 live 用 IDs；确需批量加 `allowKeywordLive:true` |
 | 误操作 | 默认真实下架 | 默认 dryRun；live 必须 confirmDestructive |

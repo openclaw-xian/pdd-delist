@@ -35,6 +35,7 @@ if (!ids.length && !keyword) addIssue("target_missing", "config 需要 ids 或 k
 if (!CFG.recordRoot && !CFG.root) addIssue("root_missing", "请配置 recordRoot（记录输出目录）");
 if (!DRYRUN && CFG.confirmDestructive !== true) addIssue("destructive_not_confirmed", "真实下架必须显式 confirmDestructive:true；先用 dryRun 确认清单");
 if (!DRYRUN && !String(CFG.reason || "暂停销售").trim()) addIssue("reason_empty", "申请下架需要非空 reason");
+if (!DRYRUN && keyword && CFG.allowKeywordLive !== true) addIssue("keyword_live_not_allowed", "关键词模式真实下架可能一次下很多商品；如确认要批量下架，显式 allowKeywordLive:true");
 if (!existsSync(EGO)) addIssue("ego_not_found", "ego-browser 不可用：" + EGO, { ego: EGO });
 
 if (issues.length) {

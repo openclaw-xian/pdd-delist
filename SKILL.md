@@ -15,6 +15,7 @@ description: 拼多多多店铺商品下架（ego 浏览器）。按 goods_id �
   1. `dryRun: false`
   2. `confirmDestructive: true`
   3. 用户已确认 ID/关键词清单与 `reason`
+  4. **关键词模式 live 还要显式 `allowKeywordLive:true`**（防止一次批量下太多；日常请用 IDs 模式 live）
 - 申请下架的 `reason` 只填用户确认过的中性文案（默认 `暂停销售`），**不编造业务理由**。
 
 ## 用法

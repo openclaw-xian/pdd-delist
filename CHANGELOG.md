@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.4 — 2026-11-21
+
+- 关键词模式 live 默认拦截：`keyword_live_not_allowed`；防止一次批量下太多。
+- 日常 live 推荐 IDs 模式；确需批量关键词下架需显式 `allowKeywordLive:true`。
+- 文档/测试更新：关键词清零 live 不再作为日常验收项。
+
 ## 0.1.3 — 2026-11-21
 
 - 普通下架路径 live 实测：测试 ID `988027547481` → `下架` → `off_shelf`，26.1s。

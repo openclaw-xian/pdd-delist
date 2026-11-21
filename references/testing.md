@@ -22,6 +22,12 @@
 | 店铺B，ids=[1 个 ID] | 13s，读到 `on_sale`，记录 `would_申请下架` |
 | 记录 | 生成 `pdd-delist-2026-11-21.md` / enumerate 清单 |
 
+## 安全预检
+
+| 用例 | 结果 |
+|---|---|
+| keyword + `dryRun:false` 未给 `allowKeywordLive` | `keyword_live_not_allowed`，exit 3，不打开浏览器 |
+
 ## live 实测
 
 | 用例 | 结果 |
@@ -30,9 +36,8 @@
 | 测试 ID 单条（普通下架） | `on_sale` → 下架 → `off_shelf` / unlisted，26.1s |
 | 记录 | `D:/pdd-delist/碧竹家居/pdd-delist-2026-11-21.md` |
 
-## 未测
+## 未测 / 非阻塞
 
-- 关键词清零复核（live）
+- 关键词清零复核 live：**默认禁用**，非日常使用，不作为交付阻塞
 - 多店串联 live
-- ~~普通下架（非申请）的新代码 live~~ 已测（单条普通下架，26.1s）
-- 页面预算 needs
+- 页面预算 needs（页面预算自动重建已在 enumerateOnly 验证）
