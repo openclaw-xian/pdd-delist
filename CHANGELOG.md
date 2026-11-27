@@ -1,3 +1,9 @@
+## 0.1.7 — 2026-11-27
+
+- 接入商品主档：真实下架成功后写 `商品/<店铺>/<商品ID>/`，`lifecycleStatus=已下架`。
+- 下架前调用 `assertCan`；已下架商品返回 `already_delisted`。
+- 账本根目录 `ledgerRoot`，默认 `%USERPROFILE%/店铺运营日志`。
+
 # Changelog
 
 ## 0.1.6 — 2026-11-21
