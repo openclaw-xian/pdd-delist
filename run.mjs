@@ -16,6 +16,7 @@ const HOME = os.homedir();
 const SELF_DIR = path.dirname(fileURLToPath(import.meta.url));
 const WORKER = String(CFG.worker || path.join(SELF_DIR, "worker-delist.mjs")).replace(/\\/g, "/");
 const RECORD_ROOT = String(CFG.recordRoot || CFG.root || "D:/pdd-delist").replace(/\\/g, "/").replace(/\/$/, "");
+const LEDGER_ROOT = resolveLedgerRoot(CFG);
 const EGO = String(CFG.ego || path.join(HOME, ".local", "share", "ego", "active_version_dir", "ego-browser.exe")).replace(/\\/g, "/");
 const RUNTIME = String(CFG.runtimeDir || path.join(os.tmpdir(), "pdd-delist-runtime")).replace(/\\/g, "/").replace(/\/$/, "");
 const RUN_ID = "delist-" + new Date().toISOString().replace(/[-:T]/g, "").slice(0, 14);

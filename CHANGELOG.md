@@ -1,3 +1,9 @@
+## 0.1.9 — 2026-11-27
+
+- 修复下架入口未定义 `LEDGER_ROOT` 导致真实下架报错。
+- 实测商品 1023569000338：dry-run `on_sale/would_申请下架`；真实下架 `off_shelf/unlisted`。
+- 商品主档写入 `lifecycleStatus=已下架`；随后 `pdd-edit-goods` preflight 返回 `product_delisted`。
+
 ## 0.1.8 — 2026-11-27
 
 - 同步加固版商品主档：未知状态/pending 拦截、原子写、事件重建、商品锁。
