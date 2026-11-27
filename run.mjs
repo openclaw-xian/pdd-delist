@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { resolveLedgerRoot, assertCan, recordResult, acquireLock, releaseLock } from "./product-ledger.mjs";
+import { resolveLedgerRoot, saveLedgerRoot, assertCan, recordResult, acquireLock, releaseLock } from "./product-ledger.mjs";
 import os from "node:os";
 import path from "node:path";
 
@@ -17,6 +17,7 @@ const SELF_DIR = path.dirname(fileURLToPath(import.meta.url));
 const WORKER = String(CFG.worker || path.join(SELF_DIR, "worker-delist.mjs")).replace(/\\/g, "/");
 const RECORD_ROOT = String(CFG.recordRoot || CFG.root || "D:/pdd-delist").replace(/\\/g, "/").replace(/\/$/, "");
 const LEDGER_ROOT = resolveLedgerRoot(CFG);
+try { if (CFG.ledgerRoot && CFG.persistLedgerRoot !== false) saveLedgerRoot(LEDGER_ROOT); } catch {}
 const EGO = String(CFG.ego || path.join(HOME, ".local", "share", "ego", "active_version_dir", "ego-browser.exe")).replace(/\\/g, "/");
 const RUNTIME = String(CFG.runtimeDir || path.join(os.tmpdir(), "pdd-delist-runtime")).replace(/\\/g, "/").replace(/\/$/, "");
 const RUN_ID = "delist-" + new Date().toISOString().replace(/[-:T]/g, "").slice(0, 14);
