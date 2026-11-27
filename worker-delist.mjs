@@ -12,7 +12,7 @@ const log = (...a) => {
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 let task = null, page = null;
-const RECORD_DIR = (JOB.recordRoot || "D:/pdd-delist").replace(/\\/g, "/").replace(/\/$/, "") + "/" + JOB.shop;
+const RECORD_DIR = (JOB.recordRoot || path.join(process.cwd(), "pdd-delist")).replace(/\\/g, "/").replace(/\/$/, "") + "/" + JOB.shop;
 
 function localStamp() {
   const d = new Date(Date.now() + 8 * 3600 * 1000);

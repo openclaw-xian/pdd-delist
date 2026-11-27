@@ -20,7 +20,7 @@ node run.mjs delist-config.json
 
 ```json
 {
-  "recordRoot": "D:/pdd-delist",
+  "recordRoot": "<下架记录目录>",
   "dryRun": true,
   "confirmDestructive": false,
   "reason": "暂停销售",

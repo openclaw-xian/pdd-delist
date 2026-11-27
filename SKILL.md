@@ -26,7 +26,7 @@ node <skill目录>/run.mjs delist-config.json
 
 ```json
 {
-  "recordRoot": "D:/pdd-delist",
+  "recordRoot": "<下架记录目录>",
   "dryRun": true,
   "confirmDestructive": false,
   "reason": "暂停销售",
@@ -49,7 +49,7 @@ node <skill目录>/run.mjs delist-config.json
 
 ```json
 {
-  "recordRoot": "D:/pdd-delist",
+  "recordRoot": "<下架记录目录>",
   "dryRun": false,
   "confirmDestructive": true,
   "shops": [
@@ -66,7 +66,7 @@ node <skill目录>/run.mjs delist-config.json
 
 | 字段 | 默认 | 说明 |
 |---|---|---|
-| `recordRoot` | `D:/pdd-delist` | 记录根目录；`root` 也可作别名 |
+| `recordRoot` | `<下架记录目录>` | 记录根目录；`root` 也可作别名 |
 | `dryRun` | **true** | 只读计划；live 必须显式 false |
 | `confirmDestructive` | false | live 必须 true |
 | `allowKeywordLive` | false | 关键词 live 批量下架保护；必须显式 true |

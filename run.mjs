@@ -15,7 +15,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const HOME = os.homedir();
 const SELF_DIR = path.dirname(fileURLToPath(import.meta.url));
 const WORKER = String(CFG.worker || path.join(SELF_DIR, "worker-delist.mjs")).replace(/\\/g, "/");
-const RECORD_ROOT = String(CFG.recordRoot || CFG.root || "D:/pdd-delist").replace(/\\/g, "/").replace(/\/$/, "");
+const RECORD_ROOT = String(CFG.recordRoot || CFG.root || path.join(process.cwd(), "pdd-delist")).replace(/\\/g, "/").replace(/\/$/, "");
 const LEDGER_ROOT = resolveLedgerRoot(CFG);
 try { if (CFG.ledgerRoot && CFG.persistLedgerRoot !== false) saveLedgerRoot(LEDGER_ROOT); } catch {}
 const EGO = String(CFG.ego || path.join(HOME, ".local", "share", "ego", "active_version_dir", "ego-browser.exe")).replace(/\\/g, "/");
