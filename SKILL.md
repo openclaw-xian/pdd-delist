@@ -168,3 +168,7 @@ md 表列：
 ## 商品主档
 
 真实下架成功后写入 `店铺运营日志/商品/<店铺>/<商品ID>/`，商品档案 `lifecycleStatus=已下架`。下架前 `assertCan`，已下架不再重复下架；dryRun 不落账。
+
+## 首次使用
+
+必须询问用户运营日志目录并配置 `ledgerRoot`；未配置返回 `ledger_root_required`，不默认 C 盘，不创建目录。

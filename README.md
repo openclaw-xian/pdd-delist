@@ -45,3 +45,7 @@ node run.mjs delist-config.json
 ```
 
 详细流程、选择器、坑、边界见 [SKILL.md](SKILL.md)。
+
+## 首次使用
+
+必须询问用户运营日志目录并配置 `ledgerRoot`；未配置返回 `ledger_root_required`，不默认 C 盘，不创建目录。

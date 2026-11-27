@@ -27,6 +27,7 @@ const DRYRUN = CFG.dryRun !== false; // 默认只读，防止误操作
 
 const issues = [];
 const addIssue = (code, question, extra = {}) => issues.push({ code, question, ...extra });
+if (!LEDGER_ROOT) addIssue("ledger_root_required", "首次使用请指定运营日志目录 ledgerRoot，不要默认 C 盘");
 function parseIds(v) {
   if (Array.isArray(v)) return v.map((x) => String(x).trim()).filter(Boolean);
   return String(v || "").split(/[\s,，]+/).map((x) => x.trim()).filter(Boolean);
