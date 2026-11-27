@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { resolveLedgerRoot, assertCan, recordResult } from "./product-ledger.mjs";
+import { resolveLedgerRoot, assertCan, recordResult, acquireLock, releaseLock } from "./product-ledger.mjs";
 import os from "node:os";
 import path from "node:path";
 
@@ -101,17 +101,34 @@ async function runOne(store, i) {
 
 const completed = [];
 for (let i = 0; i < useShops.length; i++) {
-  const r = await runOne(useShops[i], i);
-  completed.push(r);
-  if (!DRYRUN && r.result && r.result.status === "done") {
-    const list = (r.result.records || r.result.items || []).map((x) => String(x.goodsId || x.id || "")).filter(Boolean);
-    const targetIds = list.length ? list : (useShops[i]._hasIds ? useShops[i]._ids : ids);
-    for (const id of targetIds) {
-      try { await recordResult({ root: LEDGER_ROOT, skill: "pdd-delist", shop: r.shop, action: "delist", goodsId: id, targetId: id, target: "商品下架", before: "在售", after: { lifecycleStatus: "已下架" }, result: "success", runId: RUN_ID, evidence: path.join(RESULT_DIR, r.shop + ".json") }); } catch (e) { console.error("RECORD_FAILED " + (e && e.message || e)); }
-    }
+  const targetIds = useShops[i]._hasIds ? useShops[i]._ids : ids;
+  const locks = [];
+  let lockError = null;
+  for (const id of targetIds) {
+    const l = await acquireLock({ root: LEDGER_ROOT, shop: useShops[i].shop, goodsId: id });
+    if (!l.ok) { lockError = "product_locked:" + id; break; }
+    locks.push(l);
   }
-  const x = r.result || {};
-  console.log("DONE " + r.shop + " status=" + (x.needs ? "needs" : (x.status || "?")) + " requested=" + (x.requested === undefined ? "-" : x.requested) + " wall=" + r.wallSec + "s" + (x.error ? " err=" + x.error : ""));
+  if (lockError) {
+    completed.push({ shop: useShops[i].shop, result: { status: "failed", error: lockError }, wallSec: 0 });
+    console.log("DONE " + useShops[i].shop + " status=failed err=" + lockError);
+    continue;
+  }
+  try {
+    const r = await runOne(useShops[i], i);
+    completed.push(r);
+    if (!DRYRUN && r.result && r.result.status === "done") {
+      const list = (r.result.records || r.result.items || []).map((x) => String(x.goodsId || x.id || "")).filter(Boolean);
+      const idsToRecord = list.length ? list : targetIds;
+      for (const id of idsToRecord) {
+        try { await recordResult({ root: LEDGER_ROOT, skill: "pdd-delist", shop: r.shop, action: "delist", goodsId: id, targetId: id, target: "商品下架", before: "在售", after: { lifecycleStatus: "已下架" }, result: "success", runId: RUN_ID, evidence: path.join(RESULT_DIR, r.shop + ".json") }); } catch (e) { console.error("RECORD_FAILED " + (e && e.message || e)); }
+      }
+    }
+    const x = r.result || {};
+    console.log("DONE " + r.shop + " status=" + (x.needs ? "needs" : (x.status || "?")) + " requested=" + (x.requested === undefined ? "-" : x.requested) + " wall=" + r.wallSec + "s" + (x.error ? " err=" + x.error : ""));
+  } finally {
+    for (const l of locks) await releaseLock(l);
+  }
 }
 const report = {
   runId: RUN_ID, dryRun: DRYRUN, recordRoot: RECORD_ROOT, ids, keyword,
