@@ -27,8 +27,7 @@ node run.mjs delist-config.json
   "shops": [{ "shop": "<店铺A>", "profile": "<profile-A>" }],
   "ids": [],
   "keyword": "<标题关键词>",
-  "enumerateOnly": false,
-  "dryRun": true
+  "enumerateOnly": false
 }
 ```
 
@@ -53,3 +52,9 @@ node run.mjs delist-config.json
 ## 共享账本配置
 
 首次指定 `ledgerRoot` 后会写入共享配置（默认 `%USERPROFILE%/.config/pdd/ledger.json`，可用 `PDD_LEDGER_CONFIG` 覆盖）。其他 skill 自动读取，不再重复询问；配置里只存目录指针，不存业务数据。
+
+## 运行预期与退出码
+
+- 单条约 25s，10 条约 4-5 分钟。
+- 退出码：0 完成；3 预检；4 needs；5 失败。
+- `allowKeywordLive:true` 用于防止关键词模式一次批量下太多；日常请用 IDs 模式。
