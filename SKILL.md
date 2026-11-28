@@ -176,3 +176,12 @@ md 表列：
 ## 共享账本配置
 
 首次指定 `ledgerRoot` 后会写入共享配置（默认 `%USERPROFILE%/.config/pdd/ledger.json`，可用 `PDD_LEDGER_CONFIG` 覆盖）。其他 skill 自动读取，不再重复询问；配置里只存目录指针，不存业务数据。
+
+## 多店铺约定
+
+- 一个 `profile` 只对应一个店铺，`profile` 是唯一身份。
+- `shop` 只用于展示和账本/产物目录，不用于定位登录态。
+- 配置必须显式给 `{ shop, profile }`，不按店铺名猜 profile。
+- 登录、space、操作都按 profile 隔离。
+- profile 缺失/失效 → `shop_not_logged_in` / `login_required`，不自动映射。
+- 账本/产物路径按 shop 分：`<root>/<shop>/...`。
